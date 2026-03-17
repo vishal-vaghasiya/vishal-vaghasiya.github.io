@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vishal Vaghasiya — Senior iOS Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Nunito+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#f9f9f7;--bg2:#f2f1ec;--surface:#ffffff;
+    --border:#e4e2da;--border2:#cccac0;
+    --text:#18181b;--text2:#44433e;--muted:#888680;
+    --accent:#1a56db;--accent-lt:#eef3ff;--accent-bdr:#bfcffc;
+    --gold:#a07840;--gold-lt:#fdf5e8;--gold-bdr:#e8d4a8;
+    --green:#15643a;--green-lt:#edfaf3;--green-bdr:#a8e6c4;
+    --teal:#0e7490;--teal-lt:#ecfeff;--teal-bdr:#a5e1f0;
+    --sh-sm:0 1px 3px rgba(0,0,0,0.05),0 1px 2px rgba(0,0,0,0.04);
+    --sh-md:0 4px 18px rgba(0,0,0,0.07),0 2px 6px rgba(0,0,0,0.04);
+    --sh-lg:0 14px 48px rgba(0,0,0,0.10),0 4px 16px rgba(0,0,0,0.06);
+  }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'Nunito Sans',sans-serif;line-height:1.65;overflow-x:hidden}
+
+  /* ══════════ NAV ══════════ */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:300;
+    height:64px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 2.25rem;
+    background:rgba(249,249,247,0.94);
+    backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+  }
+  /* Logo: clean text-only wordmark */
+  .nav-logo{display:flex;align-items:center;gap:0.5rem;text-decoration:none}
+  .logo-monogram{
+    width:36px;height:36px;flex-shrink:0;
+    background:var(--text);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .logo-monogram svg{width:22px;height:22px}
+  .nav-wordmark{display:flex;flex-direction:column;line-height:1.15}
+  .nw-name{font-family:'Playfair Display',serif;font-size:0.97rem;font-weight:700;color:var(--text);letter-spacing:0.01em}
+  .nw-role{font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase}
+  .nav-links{display:flex;list-style:none;gap:0.1rem;align-items:center}
+  .nav-links a{font-size:0.8rem;font-weight:600;color:var(--text2);text-decoration:none;padding:0.38rem 0.78rem;border-radius:6px;transition:all 0.18s}
+  .nav-links a:hover{color:var(--accent);background:var(--accent-lt)}
+  .nav-cta{background:var(--text)!important;color:var(--bg)!important;border-radius:7px!important;padding:0.42rem 1.1rem!important}
+  .nav-cta:hover{background:var(--accent)!important;color:#fff!important}
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;border-radius:6px;transition:background 0.2s}
+  .hamburger:hover{background:var(--bg2)}
+  .hamburger span{display:block;width:20px;height:1.5px;background:var(--text2);border-radius:2px}
+  .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(249,249,247,0.98);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);z-index:299;padding:1rem 2.25rem 1.5rem}
+  .mobile-menu.open{display:block}
+  .mobile-menu a{display:block;padding:0.7rem 0;font-size:0.88rem;font-weight:600;color:var(--text2);text-decoration:none;border-bottom:1px solid var(--border);transition:color 0.2s}
+  .mobile-menu a:last-child{border-bottom:none}
+  .mobile-menu a:hover{color:var(--accent)}
+
+  /* ══════════ HERO ══════════ */
+  #hero{
+    min-height:100vh;
+    display:flex;align-items:center;
+    padding:80px 2.25rem 4rem;
+    position:relative;overflow:hidden;
+    background:#f9f9f7;
+  }
+
+  /* Animated background canvas */
+  #hero-canvas{
+    position:absolute;inset:0;
+    pointer-events:none;z-index:0;
+    opacity:0.55;
+  }
+
+  /* Subtle gradient overlay on top of canvas */
+  .hero-gradient-overlay{
+    position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:
+      radial-gradient(ellipse 60% 55% at 70% 30%, rgba(26,86,219,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 50% at 20% 80%, rgba(160,120,64,0.05) 0%, transparent 70%);
+  }
+
+  .hero-inner{
+    max-width:1180px;margin:0 auto;width:100%;
+    display:grid;grid-template-columns:1fr 360px;
+    gap:4rem;align-items:center;
+    position:relative;z-index:2;
+  }
+
+  .hero-pill{
+    display:inline-flex;align-items:center;gap:0.5rem;
+    font-family:'JetBrains Mono',monospace;font-size:0.67rem;color:var(--green);
+    background:var(--green-lt);border:1px solid var(--green-bdr);
+    padding:0.32rem 0.85rem;border-radius:20px;
+    margin-bottom:1.5rem;letter-spacing:0.06em;text-transform:uppercase;
+  }
+  .pill-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2.2s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+
+  .hero-name{
+    font-family:'Playfair Display',serif;
+    font-size:clamp(2.9rem,6.5vw,5.8rem);
+    font-weight:800;line-height:1.0;
+    letter-spacing:-0.025em;color:var(--text);
+    margin-bottom:0.35rem;
+  }
+  .hero-name em{font-style:italic;color:var(--accent)}
+  .hero-tagline{font-family:'JetBrains Mono',monospace;font-size:clamp(0.64rem,1.4vw,0.77rem);color:var(--muted);letter-spacing:0.09em;text-transform:uppercase;margin-bottom:1.6rem}
+  .hero-desc{font-size:clamp(0.9rem,1.7vw,1.02rem);color:var(--text2);max-width:530px;line-height:1.82;margin-bottom:2.2rem}
+  .hero-stats{display:flex;gap:2rem;flex-wrap:wrap;margin-bottom:2.2rem;padding-bottom:2.2rem;border-bottom:1px solid var(--border)}
+  .stat-num{font-family:'Playfair Display',serif;font-size:2.3rem;font-weight:700;color:var(--text);line-height:1}
+  .stat-lbl{font-family:'JetBrains Mono',monospace;font-size:0.57rem;color:var(--muted);letter-spacing:0.07em;text-transform:uppercase;margin-top:0.2rem}
+  .hero-cta{display:flex;gap:0.75rem;flex-wrap:wrap}
+
+  /* ── Big Profile Card ── */
+  .hero-profile-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:24px;
+    box-shadow:var(--sh-lg);
+    padding:2.5rem 2rem;
+    display:flex;flex-direction:column;align-items:center;
+    gap:1.25rem;text-align:center;
+    position:relative;overflow:hidden;
+  }
+  /* top accent bar */
+  .hero-profile-card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:4px;
+    background:linear-gradient(90deg,var(--accent),#6ea8fe,var(--teal));
+    border-radius:24px 24px 0 0;
+  }
+  .profile-avatar-wrap{
+    position:relative;
+    width:130px;height:130px;
+  }
+  .profile-avatar-wrap::after{
+    content:'';position:absolute;inset:-4px;
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),#6ea8fe,var(--teal));
+    z-index:-1;
+  }
+  .profile-avatar{
+    width:130px;height:130px;border-radius:50%;
+    object-fit:cover;
+    border:4px solid var(--surface);
+    box-shadow:var(--sh-md);
+    display:block;
+  }
+  .profile-online{
+    position:absolute;bottom:6px;right:6px;
+    width:16px;height:16px;border-radius:50%;
+    background:#22c55e;border:3px solid var(--surface);
+  }
+  .profile-name{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--text);line-height:1.2}
+  .profile-title{font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-top:0.1rem}
+  .profile-divider{width:100%;height:1px;background:var(--border)}
+  .profile-badges{display:flex;flex-direction:column;gap:0.45rem;width:100%}
+  .pbadge{
+    display:flex;align-items:center;gap:0.55rem;
+    padding:0.5rem 0.8rem;
+    background:var(--bg);border:1px solid var(--border);
+    border-radius:8px;
+    font-family:'JetBrains Mono',monospace;font-size:0.63rem;color:var(--text2);
+    text-align:left;letter-spacing:0.02em;
+  }
+  .pbdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .profile-social{display:flex;gap:0.6rem;margin-top:0.2rem}
+  .psocial-btn{
+    flex:1;display:flex;align-items:center;justify-content:center;gap:0.4rem;
+    padding:0.55rem 0.75rem;border-radius:8px;
+    font-family:'JetBrains Mono',monospace;font-size:0.62rem;font-weight:500;
+    text-decoration:none;transition:all 0.2s;
+    border:1.5px solid var(--border);color:var(--text2);background:transparent;
+  }
+  .psocial-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-lt)}
+  .psocial-btn svg{width:14px;height:14px;flex-shrink:0}
+
+  /* ══════════ BUTTONS ══════════ */
+  .btn{display:inline-flex;align-items:center;gap:0.45rem;padding:0.7rem 1.45rem;border-radius:8px;font-family:'Nunito Sans',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.01em;text-decoration:none;transition:all 0.22s;cursor:pointer;border:none}
+  .btn-primary{background:var(--text);color:var(--bg)}
+  .btn-primary:hover{background:var(--accent);transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,86,219,0.18)}
+  .btn-outline{background:transparent;color:var(--text2);border:1.5px solid var(--border2)}
+  .btn-outline:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-lt);transform:translateY(-1px)}
+  .btn-light{background:var(--bg);color:var(--text)}
+  .btn-light:hover{background:var(--accent);color:#fff}
+
+  /* ══════════ SECTION SHELL ══════════ */
+  .sw{max-width:1180px;margin:0 auto;padding:5rem 2.25rem}
+  .sa{background:var(--bg2)}
+  .divider{height:1px;background:var(--border)}
+  .sh-eyebrow{font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;display:flex;align-items:center;gap:0.6rem;margin-bottom:0.55rem}
+  .sh-eyebrow::before{content:'';width:18px;height:1px;background:var(--accent)}
+  .sh-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.75rem);font-weight:700;letter-spacing:-0.02em;line-height:1.1;color:var(--text);margin-bottom:2.75rem}
+  .sh-title em{font-style:italic;color:var(--accent)}
+
+  /* ══════════ TAGS ══════════ */
+  .tags{display:flex;flex-wrap:wrap;gap:0.4rem}
+  .tag{font-family:'JetBrains Mono',monospace;font-size:0.61rem;padding:0.22rem 0.56rem;border-radius:4px;letter-spacing:0.02em}
+  .ta{background:var(--accent-lt);border:1px solid var(--accent-bdr);color:var(--accent)}
+  .tg{background:var(--gold-lt);border:1px solid var(--gold-bdr);color:var(--gold)}
+  .tn{background:var(--bg2);border:1px solid var(--border2);color:var(--text2)}
+  .tt{background:var(--teal-lt);border:1px solid var(--teal-bdr);color:var(--teal)}
+
+  /* ══════════ ABOUT ══════════ */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+  .about-text p{font-size:0.93rem;color:var(--text2);line-height:1.87;margin-bottom:1.1rem}
+  .value-list{display:flex;flex-direction:column;gap:0.7rem}
+  .val-card{display:flex;align-items:flex-start;gap:0.9rem;padding:1.05rem 1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--sh-sm);transition:all 0.25s}
+  .val-card:hover{border-color:var(--accent-bdr);box-shadow:var(--sh-md);transform:translateY(-2px)}
+  .val-icon{font-size:1.25rem;flex-shrink:0;margin-top:0.1rem}
+  .val-card h4{font-size:0.86rem;font-weight:700;color:var(--text);margin-bottom:0.18rem}
+  .val-card p{font-size:0.76rem;color:var(--muted);line-height:1.5}
+
+  /* ══════════ SKILLS ══════════ */
+  .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+  .sk-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;box-shadow:var(--sh-sm);transition:all 0.25s}
+  .sk-card:hover{border-color:var(--accent-bdr);box-shadow:var(--sh-md);transform:translateY(-3px)}
+  .sk-icon{font-size:1.35rem;margin-bottom:0.7rem}
+  .sk-name{font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:1rem}
+
+  /* ══════════ TIMELINE ══════════ */
+  .timeline{position:relative;padding-left:2.1rem}
+  .timeline::before{content:'';position:absolute;left:8px;top:12px;bottom:12px;width:1px;background:linear-gradient(to bottom,var(--accent),var(--border))}
+  .tl-item{position:relative;padding-bottom:2.5rem}
+  .tl-item:last-child{padding-bottom:0}
+  .tl-dot{position:absolute;left:-2.1rem;top:7px;width:14px;height:14px;border-radius:50%;border:2px solid var(--accent);background:var(--bg)}
+  .tl-dot.now{background:var(--accent);box-shadow:0 0 0 4px var(--accent-lt)}
+  .tl-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem 1.8rem;box-shadow:var(--sh-sm);transition:all 0.25s}
+  .tl-card:hover{box-shadow:var(--sh-md);border-color:var(--border2)}
+  .tl-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:0.25rem}
+  .tl-role{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--text)}
+  .tl-period{font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--green);background:var(--green-lt);border:1px solid var(--green-bdr);padding:0.2rem 0.65rem;border-radius:20px;white-space:nowrap}
+  .tl-company{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:1rem}
+  .tl-list{list-style:none;display:flex;flex-direction:column;gap:0.45rem;margin-bottom:1rem}
+  .tl-list li{font-size:0.86rem;color:var(--text2);padding-left:1.1rem;position:relative;line-height:1.6}
+  .tl-list li::before{content:'—';position:absolute;left:0;color:var(--accent);font-size:0.75rem}
+
+  /* ══════════ PROJECTS ══════════ */
+  .proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1.25rem}
+  .proj-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--sh-sm);transition:all 0.3s;display:flex;flex-direction:column}
+  .proj-card:hover{box-shadow:var(--sh-lg);border-color:var(--border2);transform:translateY(-4px)}
+  .proj-top{padding:1.35rem 1.5rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid var(--border)}
+  .proj-icon{width:52px;height:52px;border-radius:12px;object-fit:cover;border:1px solid var(--border);box-shadow:var(--sh-sm);flex-shrink:0}
+  .proj-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:0.15rem}
+  .proj-cat{font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--gold);letter-spacing:0.08em;text-transform:uppercase}
+  .proj-body{padding:1.2rem 1.5rem;flex:1}
+  .proj-desc{font-size:0.84rem;color:var(--text2);line-height:1.7;margin-bottom:1rem}
+  .feat-tags{display:flex;flex-wrap:wrap;gap:0.35rem}
+  .feat{font-family:'JetBrains Mono',monospace;font-size:0.59rem;padding:0.18rem 0.5rem;border-radius:4px;background:var(--green-lt);border:1px solid var(--green-bdr);color:var(--green)}
+  .proj-foot{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap}
+  .proj-link{font-family:'JetBrains Mono',monospace;font-size:0.67rem;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem;border:1.5px solid var(--accent-bdr);padding:0.3rem 0.72rem;border-radius:6px;white-space:nowrap;transition:all 0.2s;font-weight:500}
+  .proj-link:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+  /* ══════════ EDUCATION — HORIZONTAL ══════════ */
+  .edu-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1.25rem;
+  }
+  .edu-card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:16px;padding:2rem 2.25rem;
+    box-shadow:var(--sh-sm);
+    display:flex;gap:1.5rem;align-items:flex-start;
+    transition:all 0.25s;
+    position:relative;overflow:hidden;
+  }
+  .edu-card::after{
+    content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--accent),var(--teal));
+    opacity:0;transition:opacity 0.3s;
+  }
+  .edu-card:hover{box-shadow:var(--sh-md)}
+  .edu-card:hover::after{opacity:1}
+  .edu-icon-box{
+    width:54px;height:54px;flex-shrink:0;
+    background:var(--accent-lt);border:1px solid var(--accent-bdr);
+    border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;
+  }
+  .edu-deg{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:0.25rem}
+  .edu-school{font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--muted);margin-bottom:0.65rem}
+  .edu-badge{display:inline-flex;align-items:center;font-family:'JetBrains Mono',monospace;font-size:0.67rem;padding:0.22rem 0.65rem;border-radius:4px;margin-bottom:0.75rem}
+  .edu-note{font-size:0.82rem;color:var(--text2);line-height:1.65;margin-bottom:0.75rem}
+  .edu-logo{width:54px;height:54px;border-radius:12px;object-fit:contain;border:1px solid var(--border);background:var(--surface);padding:5px;flex-shrink:0}
+
+  /* ══════════ RESUME ══════════ */
+  .resume-layout{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+  .hl-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem}
+  .hl{display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:var(--text2)}
+  .hl::before{display:none}
+
+  /* ══════════ CONTACT ══════════ */
+  .contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+  .cc-list{display:flex;flex-direction:column;gap:0.75rem}
+  .cc-card{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;text-decoration:none;box-shadow:var(--sh-sm);transition:all 0.22s}
+  .cc-card:hover{border-color:var(--accent-bdr);box-shadow:var(--sh-md);transform:translateX(4px)}
+  .cc-icon{width:38px;height:38px;flex-shrink:0;background:var(--accent-lt);border:1px solid var(--accent-bdr);border-radius:9px;display:flex;align-items:center;justify-content:center}
+  .cc-icon svg{width:17px;height:17px}
+  .cc-label{font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.15rem}
+  .cc-val{font-size:0.86rem;font-weight:600;color:var(--text);word-break:break-all}
+  .cta-box{background:var(--text);border-radius:20px;padding:2.5rem;color:var(--bg)}
+  .cta-box h3{font-family:'Playfair Display',serif;font-size:1.85rem;font-weight:700;line-height:1.15;margin-bottom:0.75rem;letter-spacing:-0.02em}
+  .cta-box p{font-size:0.87rem;color:rgba(255,255,255,0.55);line-height:1.78;margin-bottom:1.75rem}
+
+  /* ══════════ FOOTER ══════════ */
+  footer{background:var(--text);color:rgba(255,255,255,0.38);text-align:center;padding:2rem;font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.05em}
+  footer strong{color:rgba(255,255,255,0.7)}
+
+  /* ══════════ ANIMATIONS ══════════ */
+  .fu{opacity:1;transform:translateY(0);transition:opacity 0.55s ease,transform 0.55s ease}
+  .fu.animate{opacity:0;transform:translateY(18px)}
+  .fu.animate.on{opacity:1;transform:translateY(0)}
+
+  /* ══════════ RESPONSIVE ══════════ */
+  @media(max-width:960px){
+    .hero-inner{grid-template-columns:1fr}
+    .hero-profile-card{max-width:320px;margin:0 auto}
+    .about-grid{grid-template-columns:1fr}
+    .contact-layout{grid-template-columns:1fr}
+    .resume-layout{grid-template-columns:1fr}
+    .edu-row{grid-template-columns:1fr}
+  }
+  @media(max-width:768px){
+    nav{padding:0 1.25rem}
+    .nav-links{display:none}
+    .hamburger{display:flex}
+    #hero{padding:82px 1.25rem 3.5rem;min-height:100svh}
+    .sw{padding:3.5rem 1.25rem}
+    .proj-grid{grid-template-columns:1fr}
+    .skills-grid{grid-template-columns:1fr 1fr;gap:0.75rem}
+    .timeline{padding-left:1.5rem}
+    .tl-dot{left:-1.5rem}
+    .edu-card{flex-direction:column;gap:1rem;padding:1.5rem}
+    .hl-grid{grid-template-columns:1fr}
+  }
+  @media(max-width:480px){
+    .skills-grid{grid-template-columns:1fr}
+    .hero-cta{flex-direction:column}
+    .btn{width:100%;justify-content:center}
+    .tl-hdr{flex-direction:column;gap:0.35rem}
+    .hero-stats{gap:1.5rem}
+    .edu-row{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="logo-monogram">
+      <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 5L8 17L11 10L14 17L19 5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="11" cy="19.5" r="1.4" fill="#6ea8fe"/>
+      </svg>
+    </div>
+    <div class="nav-wordmark">
+      <span class="nw-name">Vishal Vaghasiya</span>
+      <span class="nw-role">Senior iOS Developer</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#skills" onclick="closeMenu()">Skills</a>
+  <a href="#experience" onclick="closeMenu()">Experience</a>
+  <a href="#projects" onclick="closeMenu()">Projects</a>
+  <a href="#resume" onclick="closeMenu()">Resume</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-gradient-overlay"></div>
+  <div class="hero-inner">
+    <!-- Left content -->
+    <div>
+      <div class="hero-pill"><span class="pill-dot"></span>Open to consulting &amp; partnerships</div>
+      <h1 class="hero-name">Vishal<br><em>Vaghasiya</em></h1>
+      <p class="hero-tagline">Senior iOS Developer &nbsp;&middot;&nbsp; Team Lead &nbsp;&middot;&nbsp; Surat, India</p>
+      <p class="hero-desc">Delivering production-grade iOS applications with 8+ years of expertise in Swift, SwiftUI, and modern iOS architecture. Expert in concurrency, performance optimisation, and leading engineering teams from concept to App Store.</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num" id="yrsExp">8+</div><div class="stat-lbl">Years Experience</div></div>
+        <div class="stat"><div class="stat-num">50+</div><div class="stat-lbl">Apps Shipped</div></div>
+        <div class="stat"><div class="stat-num">5+</div><div class="stat-lbl">Devs Mentored</div></div>
+      </div>
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-primary">Get In Touch &#x2197;</a>
+        <a href="#projects" class="btn btn-outline">View Projects</a>
+        <a href="https://vishal-vaghasiya.github.io/assets/Vishal_Vaghasiya_Senior_iOS_Developer_Resume.pdf" target="_blank" class="btn btn-outline">&#x2B07; Resume</a>
+      </div>
+    </div>
+
+    <!-- Big Profile Card -->
+    <div class="hero-profile-card">
+      <div class="profile-avatar-wrap">
+        <img src="https://vishal-vaghasiya.github.io/image/profile_pic.jpg" alt="Vishal Vaghasiya" class="profile-avatar">
+        <div class="profile-online"></div>
+      </div>
+      <div>
+        <div class="profile-name">Vishal Vaghasiya</div>
+        <div class="profile-title">iOS Team Lead</div>
+      </div>
+      <div class="profile-divider"></div>
+      <div class="profile-badges">
+        <div class="pbadge"><span class="pbdot" style="background:#22c55e"></span>Available for new projects</div>
+        <div class="pbadge"><span class="pbdot" style="background:#1a56db"></span>Swift &middot; SwiftUI &middot; UIKit</div>
+        <div class="pbadge"><span class="pbdot" style="background:#a07840"></span>8+ Years iOS Development</div>
+        <div class="pbadge"><span class="pbdot" style="background:#0e7490"></span>Surat, Gujarat, India &#x1F1EE;&#x1F1F3;</div>
+      </div>
+      <div class="profile-social">
+        <a href="https://www.linkedin.com/in/vishal-vaghasiya/" target="_blank" class="psocial-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.27c-.97 0-1.75-.79-1.75-1.76s.78-1.75 1.75-1.75 1.75.78 1.75 1.75-.78 1.76-1.75 1.76zm13.5 12.27h-3v-5.6c0-1.34-.03-3.07-1.87-3.07-1.87 0-2.16 1.46-2.16 2.97v5.7h-3v-11h2.88v1.5h.04c.4-.76 1.38-1.56 2.84-1.56 3.04 0 3.6 2 3.6 4.59v6.47z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://github.com/vishal-vaghasiya" target="_blank" class="psocial-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.63 0-12 5.37-12 12 0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.31-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.005 2.04.138 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.87.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.82 1.1.82 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<div id="about">
+  <div class="sw">
+    <div class="sh-eyebrow">About</div>
+    <h2 class="sh-title">Engineering iOS apps<br>that <em>scale &amp; delight</em></h2>
+    <div class="about-grid">
+      <div class="about-text fu">
+        <p>With over 8 years in iOS development, I have grown from writing my first Swift lines to owning end-to-end product delivery as a senior developer and team lead, consistently shipping high-quality applications that users love.</p>
+        <p>I specialise in Swift, SwiftUI, and UIKit with deep expertise in clean architecture patterns (MVVM, MVP, VIPER), modern concurrency (async/await, GCD), and performance optimisation using ARC and Instruments. My apps span healthcare, transport, media, and property management industries.</p>
+        <p>At Nexios Technologies, I own the full iOS lifecycle from requirement analysis and architecture design to CI/CD pipelines with Xcode Cloud and Fastlane, App Store submission, and post-release monitoring via Crashlytics and Sentry.</p>
+      </div>
+      <div class="value-list fu">
+        <div class="val-card"><span class="val-icon">&#x1F3D7;&#xFE0F;</span><div><h4>Architecture First</h4><p>MVVM, MVP, VIPER, MVC chosen per project scale and testability needs</p></div></div>
+        <div class="val-card"><span class="val-icon">&#x26A1;</span><div><h4>Concurrency Expert</h4><p>async/await, GCD, OperationQueue for responsive, race-condition-free code</p></div></div>
+        <div class="val-card"><span class="val-icon">&#x1F680;</span><div><h4>Performance Obsessed</h4><p>ARC memory management, Instruments profiling, crash reduction via Crashlytics</p></div></div>
+        <div class="val-card"><span class="val-icon">&#x1F465;</span><div><h4>Engineering Leader</h4><p>CI/CD with Xcode Cloud &amp; Fastlane, mentoring devs, driving team standards</p></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<div id="skills" class="sa">
+  <div class="sw">
+    <div class="sh-eyebrow">Skills</div>
+    <h2 class="sh-title">Technical <em>expertise</em></h2>
+    <div class="skills-grid">
+      <div class="sk-card fu"><div class="sk-icon">&#x1F4BB;</div><div class="sk-name">Languages</div><div class="tags"><span class="tag ta">Swift</span><span class="tag ta">SwiftUI</span><span class="tag ta">Objective-C</span></div></div>
+      <div class="sk-card fu"><div class="sk-icon">&#x1F3DB;&#xFE0F;</div><div class="sk-name">Architecture &amp; Design</div><div class="tags"><span class="tag tg">MVVM</span><span class="tag tg">MVP</span><span class="tag tg">VIPER</span><span class="tag tg">MVC</span><span class="tag tg">Clean Architecture</span><span class="tag tg">SOLID</span></div></div>
+      <div class="sk-card fu"><div class="sk-icon">&#x26A1;</div><div class="sk-name">Modern Concurrency</div><div class="tags"><span class="tag tt">async/await</span><span class="tag tt">GCD</span><span class="tag tt">OperationQueue</span><span class="tag tt">Combine</span><span class="tag tt">Background Tasks</span></div></div>
+      <div class="sk-card fu"><div class="sk-icon">&#x1F527;</div><div class="sk-name">Frameworks &amp; APIs</div><div class="tags"><span class="tag ta">UIKit</span><span class="tag ta">Foundation</span><span class="tag ta">Core Location</span><span class="tag ta">StoreKit</span><span class="tag ta">AVFoundation</span><span class="tag ta">MapKit</span></div></div>
+      <div class="sk-card fu"><div class="sk-icon">&#x1F5C4;&#xFE0F;</div><div class="sk-name">Data Persistence</div><div class="tags"><span class="tag tg">SwiftData</span><span class="tag tg">Core Data</span><span class="tag tg">SQLite</span><span class="tag tg">Realm</span><span class="tag tg">CloudKit</span><span class="tag tg">Keychain</span></div></div>
+      <div class="sk-card fu"><div class="sk-icon">&#x1F680;</div><div class="sk-name">CI/CD &amp; DevOps</div><div class="tags"><span class="tag tt">Xcode Cloud</span><span class="tag tt">Fastlane</span><span class="tag tt">TestFlight</span><span class="tag tt">App Store Connect</span><span class="tag tt">Crashlytics</span><span class="tag tt">Sentry</span></div></div>
+      <div class="sk-card fu"><div class="sk-icon">&#x1F310;</div><div class="sk-name">Networking &amp; Backend</div><div class="tags"><span class="tag tn">REST APIs</span><span class="tag tn">Alamofire</span><span class="tag tn">Firebase</span><span class="tag tn">Push Notifications</span><span class="tag tn">Live Activities</span><span class="tag tn">Payment Integration</span></div></div>
+      <div class="sk-card fu"><div class="sk-icon">&#x1F6E0;&#xFE0F;</div><div class="sk-name">Tools &amp; Collaboration</div><div class="tags"><span class="tag tn">Xcode</span><span class="tag tn">Git / GitHub</span><span class="tag tn">Bitbucket</span><span class="tag tn">Jira</span><span class="tag tn">CocoaPods</span><span class="tag tn">Instruments</span></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<div id="experience">
+  <div class="sw">
+    <div class="sh-eyebrow">Experience</div>
+    <h2 class="sh-title">Career <em>journey</em></h2>
+    <div class="timeline">
+      <div class="tl-item fu">
+        <div class="tl-dot now"></div>
+        <div class="tl-card">
+          <div class="tl-hdr"><div class="tl-role">Senior iOS Developer &amp; Team Lead</div><div class="tl-period">Jun 2020 &mdash; Present</div></div>
+          <div class="tl-company">Nexios Technologies LLP &nbsp;&middot;&nbsp; Surat, Gujarat</div>
+          <ul class="tl-list">
+            <li>Led end-to-end iOS development &mdash; requirement analysis, architecture, and App Store release &mdash; owning code quality and delivery</li>
+            <li>Designed scalable codebases using MVVM, MVP, VIPER, and MVC ensuring long-term testability and maintainability</li>
+            <li>Implemented modern iOS concurrency using async/await, GCD, and OperationQueue to improve app responsiveness</li>
+            <li>Established CI/CD pipelines with Xcode Cloud and Fastlane, automating builds, testing, and deployments</li>
+            <li>Optimised memory using ARC and reduced app crashes significantly via Crashlytics and Sentry monitoring</li>
+            <li>Mentored junior and mid-level developers, improving coding standards and release reliability across the team</li>
+            <li>Partnered with product managers and QA in Agile/Scrum to translate requirements into reliable iOS features</li>
+          </ul>
+          <div class="tags"><span class="tag ta">Swift</span><span class="tag ta">SwiftUI</span><span class="tag ta">UIKit</span><span class="tag tg">MVVM</span><span class="tag tg">VIPER</span><span class="tag tt">async/await</span><span class="tag tt">Xcode Cloud</span><span class="tag tt">Fastlane</span><span class="tag tn">Crashlytics</span><span class="tag tn">Jira</span></div>
+        </div>
+      </div>
+      <div class="tl-item fu">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-hdr"><div class="tl-role">iOS Developer</div><div class="tl-period">Feb 2019 &mdash; May 2020</div></div>
+          <div class="tl-company">JKSOL Infotech &nbsp;&middot;&nbsp; Surat, Gujarat</div>
+          <ul class="tl-list">
+            <li>Developed and deployed multiple iOS applications to the App Store in compliance with Apple Review Guidelines</li>
+            <li>Managed Apple Developer certificates, provisioning profiles, and code signing across environments</li>
+            <li>Implemented Core Data and reusable UIKit components to improve consistency and app stability</li>
+            <li>Managed TestFlight distributions, coordinated with QA, and delivered on-time reliable releases</li>
+            <li>Applied MVC, MVVM, and MVP patterns to build scalable and maintainable features</li>
+          </ul>
+          <div class="tags"><span class="tag ta">Swift</span><span class="tag ta">UIKit</span><span class="tag ta">Core Data</span><span class="tag tg">MVVM</span><span class="tag tg">MVC</span><span class="tag tn">REST APIs</span><span class="tag tn">TestFlight</span></div>
+        </div>
+      </div>
+      <div class="tl-item fu">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-hdr"><div class="tl-role">Junior iOS Developer</div><div class="tl-period">Jun 2017 &mdash; Jan 2019</div></div>
+          <div class="tl-company">Onus Infotech &nbsp;&middot;&nbsp; Surat, Gujarat</div>
+          <ul class="tl-list">
+            <li>Developed iOS features and fixed production bugs to ensure stable app functionality</li>
+            <li>Aligned with senior developers on coding standards, best practices, and iOS guidelines</li>
+            <li>Built foundational expertise in Swift, UIKit, and the full iOS application lifecycle</li>
+          </ul>
+          <div class="tags"><span class="tag ta">Swift</span><span class="tag ta">Objective-C</span><span class="tag ta">UIKit</span><span class="tag tn">Xcode</span><span class="tag tn">Git</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<div id="projects" class="sa">
+  <div class="sw">
+    <div class="sh-eyebrow">Projects</div>
+    <h2 class="sh-title">Featured <em>work</em></h2>
+    <div class="proj-grid">
+
+      <div class="proj-card fu">
+        <div class="proj-top"><img src="https://vishal-vaghasiya.github.io/image/akhbaralkhaleej.jpg" alt="Akhbar AlKhaleej" class="proj-icon"><div><div class="proj-title">Akhbar AlKhaleej</div><div class="proj-cat">News &amp; Media</div></div></div>
+        <div class="proj-body"><p class="proj-desc">Production news app delivering local and international news with rich media, real-time updates, and push notifications.</p><div class="feat-tags"><span class="feat">Real-time Updates</span><span class="feat">Push Notifications</span><span class="feat">JSON Parsing</span></div></div>
+        <div class="proj-foot"><div class="tags"><span class="tag tn">Swift</span><span class="tag tn">UIKit</span><span class="tag tn">Core Data</span></div><a href="https://apps.apple.com/in/app/akhbar-alkhaleej-%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1-%D8%A7%D9%84%D8%AE%D9%84%D9%8A%D8%AC/id1475732154" target="_blank" class="proj-link">&#x2197; App Store</a></div>
+      </div>
+
+      <div class="proj-card fu">
+        <div class="proj-top">
+          <img src="https://vishal-vaghasiya.github.io/image/MLA.png" alt="MLA Trade" class="proj-icon">
+          <div><div class="proj-title">MLA Trade</div><div class="proj-cat">Luxury Wholesale &middot; Utilities</div></div>
+        </div>
+        <div class="proj-body"><p class="proj-desc">Professional B2B network for luxury watch wholesale, featuring live inventory of Rolex, Patek Philippe, AP, Cartier and more with real-time updates and multi-image inspection.</p><div class="feat-tags"><span class="feat">Live Inventory</span><span class="feat">Wholesale Network</span><span class="feat">Real-time Updates</span></div></div>
+        <div class="proj-foot"><div class="tags"><span class="tag tn">Swift</span><span class="tag tn">REST APIs</span><span class="tag tn">UIKit</span></div><a href="https://apps.apple.com/us/app/mla-trade/id6444145250" target="_blank" class="proj-link">&#x2197; App Store</a></div>
+      </div>
+
+      <div class="proj-card fu">
+        <div class="proj-top"><img src="https://vishal-vaghasiya.github.io/image/uptaxi.jpg" alt="UPTaxi" class="proj-icon"><div><div class="proj-title">UPTaxi</div><div class="proj-cat">Transportation</div></div></div>
+        <div class="proj-body"><p class="proj-desc">Taxi booking and tracking app with real-time driver location, payment integration, and seamless booking experience.</p><div class="feat-tags"><span class="feat">Live Tracking</span><span class="feat">Payment Gateway</span><span class="feat">Google Maps</span></div></div>
+        <div class="proj-foot"><div class="tags"><span class="tag tn">Objective-C</span><span class="tag tn">MapKit</span><span class="tag tn">Google Maps</span></div><a href="https://apps.apple.com/in/app/up-taxi-chauffeur/id1175230245" target="_blank" class="proj-link">&#x2197; App Store</a></div>
+      </div>
+
+      <div class="proj-card fu">
+        <div class="proj-top"><img src="https://vishal-vaghasiya.github.io/image/stratafy.jpg" alt="Stratafy" class="proj-icon"><div><div class="proj-title">Stratafy</div><div class="proj-cat">Property Management</div></div></div>
+        <div class="proj-body"><p class="proj-desc">Property management platform connecting strata owners, managers, and tenants with communication and maintenance tracking.</p><div class="feat-tags"><span class="feat">Maintenance Tracking</span><span class="feat">Documents</span><span class="feat">Secure Comms</span></div></div>
+        <div class="proj-foot"><div class="tags"><span class="tag tn">Swift</span><span class="tag tn">UIKit</span><span class="tag tn">Core Data</span></div><a href="https://apps.apple.com/au/app/stratafy/id1273075214" target="_blank" class="proj-link">&#x2197; App Store</a></div>
+      </div>
+
+      <div class="proj-card fu">
+        <div class="proj-top"><img src="https://vishal-vaghasiya.github.io/image/homecare2go.jpg" alt="Homecare2GO" class="proj-icon"><div><div class="proj-title">Homecare2GO</div><div class="proj-cat">Healthcare</div></div></div>
+        <div class="proj-body"><p class="proj-desc">Healthcare app for scheduling appointments and managing patient care, connecting providers and patients seamlessly.</p><div class="feat-tags"><span class="feat">Appointment Scheduling</span><span class="feat">Patient Care</span><span class="feat">Push Notifications</span></div></div>
+        <div class="proj-foot"><div class="tags"><span class="tag tn">Swift</span><span class="tag tg">CloudKit</span><span class="tag tn">REST APIs</span></div><a href="https://apps.apple.com/us/app/homecare2go/id1476823889" target="_blank" class="proj-link">&#x2197; App Store</a></div>
+      </div>
+
+      <div class="proj-card fu">
+        <div class="proj-top"><img src="https://vishal-vaghasiya.github.io/image/carecoordinations.jpg" alt="Care Coordinations" class="proj-icon"><div><div class="proj-title">Care Coordinations</div><div class="proj-cat">Healthcare</div></div></div>
+        <div class="proj-body"><p class="proj-desc">HIPAA-secured healthcare coordination app with real-time patient updates, team communication, VOIP, and Live Activities.</p><div class="feat-tags"><span class="feat">HIPAA Compliant</span><span class="feat">Live Activities</span><span class="feat">VOIP &amp; Video</span></div></div>
+        <div class="proj-foot"><div class="tags"><span class="tag tn">Swift</span><span class="tag tg">Firebase</span><span class="tag tt">Live Activities</span></div><a href="https://apps.apple.com/us/app/care-coordinations/id1596737137" target="_blank" class="proj-link">&#x2197; App Store</a></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- EDUCATION — horizontal full-width -->
+<div id="education">
+  <div class="sw">
+    <div class="sh-eyebrow">Education &amp; Certifications</div>
+    <h2 class="sh-title">Academic <em>background</em></h2>
+    <div class="edu-row">
+      <div class="edu-card fu">
+        <img src="https://vishal-vaghasiya.github.io/image/Saurashtra_University.png" alt="Saurashtra University" class="edu-logo">
+        <div style="flex:1;min-width:0">
+          <div class="edu-deg">B.Sc. Information Technology (Professional)</div>
+          <div class="edu-school">Shree M. &amp; N. Virani Science College &nbsp;&middot;&nbsp; 2013 &ndash; 2016</div>
+          <div class="edu-badge" style="background:var(--green-lt);border:1px solid var(--green-bdr);color:var(--green)">CGPA: 8.099 / 10</div>
+          <p class="edu-note">Core programming, data structures, algorithms, and DBMS fundamentals that formed the engineering foundation for a professional iOS career.</p>
+        </div>
+      </div>
+      <div class="edu-card fu">
+        <img src="https://vishal-vaghasiya.github.io/image/Tops_Technologies.jpg" alt="Tops Technologies" class="edu-logo">
+        <div style="flex:1;min-width:0">
+          <div class="edu-deg">iOS App Development</div>
+          <div class="edu-school">Tops Technologies &nbsp;&middot;&nbsp; Jun 2016 &ndash; Jan 2017</div>
+          <div class="edu-badge" style="background:var(--accent-lt);border:1px solid var(--accent-bdr);color:var(--accent)">Certification</div>
+          <p class="edu-note">Intensive iOS programme covering Swift, UIKit, app lifecycle, and App Store deployment &mdash; the direct launchpad to a professional iOS career.</p>
+          <div class="tags"><span class="tag ta">Swift</span><span class="tag ta">UIKit</span><span class="tag tn">App Lifecycle</span><span class="tag tn">App Store Deployment</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- RESUME -->
+<div id="resume" class="sa">
+  <div class="sw">
+    <div class="sh-eyebrow">Resume</div>
+    <h2 class="sh-title">Download <em>resume</em></h2>
+    <div class="resume-layout fu">
+      <div>
+        <p style="font-size:0.9rem;color:var(--text2);line-height:1.82;margin-bottom:1.75rem">Comprehensive overview of 8+ years of iOS expertise, modern architecture, concurrency patterns, CI/CD, and successful delivery across healthcare, transport, media, and property industries.</p>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+          <a href="https://vishal-vaghasiya.github.io/assets/Vishal_Vaghasiya_Senior_iOS_Developer_Resume.pdf" target="_blank" class="btn btn-primary"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download Resume</a>
+          <a href="https://vishal-vaghasiya.github.io/assets/Vishal_Vaghasiya_Senior_iOS_Developer_Resume.pdf" target="_blank" class="btn btn-outline"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Preview PDF</a>
+        </div>
+      </div>
+      <div class="hl-grid">
+        <div class="hl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>8+ Years iOS Experience</div>
+        <div class="hl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Swift, SwiftUI &amp; UIKit</div>
+        <div class="hl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>MVVM &middot; MVP &middot; VIPER</div>
+        <div class="hl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>async/await Concurrency</div>
+        <div class="hl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Xcode Cloud &amp; Fastlane</div>
+        <div class="hl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>50+ Apps Delivered</div>
+        <div class="hl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Team Lead &amp; Mentor</div>
+        <div class="hl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>App Store Optimisation</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<div id="contact">
+  <div class="sw">
+    <div class="sh-eyebrow">Contact</div>
+    <h2 class="sh-title">Let's build <em>something great</em></h2>
+    <div class="contact-layout">
+      <div class="cc-list fu">
+        <a href="/cdn-cgi/l/email-protection#166077717e77657f6f772f262156717b777f7a3875797b" class="cc-card">
+          <div class="cc-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div><div class="cc-label">Email</div><div class="cc-val"><span class="__cf_email__" data-cfemail="7d0b1c1a151c0e14041c444d4a3d1a101c1411531e1210">[email&#160;protected]</span></div></div>
+        </a>
+        <a href="tel:+919725992972" class="cc-card">
+          <div class="cc-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 8.1a16 16 0 006 6l.62-.62a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <div><div class="cc-label">Phone</div><div class="cc-val">+91 972-599-2972</div></div>
+        </a>
+        <a href="https://www.linkedin.com/in/vishal-vaghasiya/" target="_blank" class="cc-card">
+          <div class="cc-icon">
+            <svg viewBox="0 0 24 24" fill="var(--accent)"><path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.27c-.97 0-1.75-.79-1.75-1.76s.78-1.75 1.75-1.75 1.75.78 1.75 1.75-.78 1.76-1.75 1.76zm13.5 12.27h-3v-5.6c0-1.34-.03-3.07-1.87-3.07-1.87 0-2.16 1.46-2.16 2.97v5.7h-3v-11h2.88v1.5h.04c.4-.76 1.38-1.56 2.84-1.56 3.04 0 3.6 2 3.6 4.59v6.47z"/></svg>
+          </div>
+          <div><div class="cc-label">LinkedIn</div><div class="cc-val">/vishal-vaghasiya</div></div>
+        </a>
+        <a href="https://github.com/vishal-vaghasiya" target="_blank" class="cc-card">
+          <div class="cc-icon">
+            <svg viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 0c-6.63 0-12 5.37-12 12 0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.31-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.005 2.04.138 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.87.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.82 1.1.82 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          </div>
+          <div><div class="cc-label">GitHub</div><div class="cc-val">github.com/vishal-vaghasiya</div></div>
+        </a>
+        <div class="cc-card" style="cursor:default">
+          <div class="cc-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div><div class="cc-label">Location</div><div class="cc-val">Surat, Gujarat, India</div></div>
+        </div>
+      </div>
+      <div class="cta-box fu">
+        <h3>Open to new opportunities</h3>
+        <p>Available for consulting, partnerships, architectural reviews, and discussing your next iOS project. Whether it is a startup MVP or a complex enterprise app &mdash; let's connect.</p>
+        <a href="/cdn-cgi/l/email-protection#275146404f46544e5e461e171067404a464e4b0944484a" class="btn btn-light">&#x2197; Send a message</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>&copy; <span id="yr"></span> <strong>Vishal Vaghasiya</strong> &nbsp;&middot;&nbsp; Senior iOS Developer &amp; Team Lead &nbsp;&middot;&nbsp; Surat, Gujarat, India</p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* Mobile menu */
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open')}
+function closeMenu(){document.getElementById('mobileMenu').classList.remove('open')}
+
+/* Footer year */
+document.getElementById('yr').textContent=new Date().getFullYear();
+
+/* Dynamic years of experience */
+(function(){
+  var s=new Date('2017-06-01'),n=new Date();
+  var y=n.getFullYear()-s.getFullYear();
+  var m=n.getMonth()-s.getMonth();
+  if(m<0||(m===0&&n.getDate()<s.getDate()))y--;
+  var el=document.getElementById('yrsExp');
+  if(el)el.textContent=y+'+';
+})();
+
+/* Scroll fade-in — progressive enhancement only */
+(function(){
+  if(!('IntersectionObserver' in window))return;
+  var obs=new IntersectionObserver(function(e){
+    e.forEach(function(x){if(x.isIntersecting){x.target.classList.remove('animate');x.target.classList.add('on')}});
+  },{threshold:0.08});
+  document.querySelectorAll('.fu').forEach(function(el){el.classList.add('animate');obs.observe(el)});
+})();
+
+/* ══ ANIMATED HERO BACKGROUND ══
+   Floating soft circles (particles) that drift gently,
+   evoking iOS-style blur/depth. Light, professional. */
+(function(){
+  var canvas=document.getElementById('hero-canvas');
+  if(!canvas)return;
+  var ctx=canvas.getContext('2d');
+  var W,H,particles=[];
+  var COLORS=['rgba(26,86,219,','rgba(14,116,144,','rgba(160,120,64,','rgba(100,160,220,'];
+
+  function resize(){
+    W=canvas.width=canvas.offsetWidth;
+    H=canvas.height=canvas.offsetHeight;
+  }
+
+  function Particle(){
+    this.reset=function(){
+      this.x=Math.random()*W;
+      this.y=Math.random()*H;
+      this.r=Math.random()*90+40;
+      this.dx=(Math.random()-0.5)*0.28;
+      this.dy=(Math.random()-0.5)*0.22;
+      this.alpha=Math.random()*0.12+0.04;
+      this.color=COLORS[Math.floor(Math.random()*COLORS.length)];
+      this.da=(Math.random()-0.5)*0.0005;
+    };
+    this.reset();
+  }
+
+  function init(){
+    particles=[];
+    var count=Math.floor((W*H)/(80000))+8;
+    for(var i=0;i<count;i++){var p=new Particle();p.x=Math.random()*W;p.y=Math.random()*H;particles.push(p);}
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(function(
