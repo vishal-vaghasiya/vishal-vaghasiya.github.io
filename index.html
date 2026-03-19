@@ -28,9 +28,11 @@
     position:fixed;top:0;left:0;right:0;z-index:300;
     height:64px;display:flex;align-items:center;justify-content:space-between;
     padding:0 2.25rem;
-    background:rgba(249,249,247,0.94);
+    background:rgba(249,249,247,0.98);
     backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
     border-bottom:1px solid var(--border);
+    box-shadow:0 1px 0 rgba(0,0,0,0.04);
   }
   /* Logo: clean text-only wordmark */
   .nav-logo{display:flex;align-items:center;gap:0.5rem;text-decoration:none}
@@ -70,7 +72,7 @@
   #hero-canvas{
     position:absolute;inset:0;
     pointer-events:none;z-index:0;
-    opacity:0.55;
+    opacity:0.25;
   }
 
   /* Subtle gradient overlay on top of canvas */
@@ -326,6 +328,7 @@
     .nav-links{display:none}
     .hamburger{display:flex}
     #hero{padding:82px 1.25rem 3.5rem;min-height:100svh}
+    #hero-canvas{display:none}
     .sw{padding:3.5rem 1.25rem}
     .proj-grid{grid-template-columns:1fr}
     .skills-grid{grid-template-columns:1fr 1fr;gap:0.75rem}
@@ -367,9 +370,9 @@
     <li><a href="#projects">Projects</a></li>
     <li><a href="#contact" class="nav-cta">Contact</a></li>
   </ul>
-  <div class="hamburger" onclick="toggleMenu()">
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu" style="background:none;border:none;cursor:pointer;">
     <span></span><span></span><span></span>
-  </div>
+  </button>
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
@@ -701,7 +704,7 @@
   <p>&copy; <span id="yr"></span> <strong>Vishal Vaghasiya</strong> &nbsp;&middot;&nbsp; Senior iOS Developer &amp; Team Lead &nbsp;&middot;&nbsp; Surat, Gujarat, India</p>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 /* Mobile menu */
 function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open')}
 function closeMenu(){document.getElementById('mobileMenu').classList.remove('open')}
@@ -734,9 +737,12 @@ document.getElementById('yr').textContent=new Date().getFullYear();
 (function(){
   var canvas=document.getElementById('hero-canvas');
   if(!canvas)return;
-  var ctx=canvas.getContext('2d');
-  var W,H,particles=[];
+
+  /* Remove canvas entirely on mobile — no rendering at all */
+  if(window.innerWidth<=768){canvas.parentNode.removeChild(canvas);return;}
   var COLORS=['rgba(26,86,219,','rgba(14,116,144,','rgba(160,120,64,','rgba(100,160,220,'];
+
+  function isMobile(){return window.innerWidth<=768;}
 
   function resize(){
     W=canvas.width=canvas.offsetWidth;
@@ -765,4 +771,38 @@ document.getElementById('yr').textContent=new Date().getFullYear();
 
   function draw(){
     ctx.clearRect(0,0,W,H);
-    particles.forEach(function(
+    particles.forEach(function(p){
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.color+p.alpha+')';
+      ctx.fill();
+      p.x+=p.dx; p.y+=p.dy; p.alpha+=p.da;
+      if(p.alpha<=0.02||p.alpha>=0.18)p.da*=-1;
+      if(p.x<-p.r)p.x=W+p.r;
+      if(p.x>W+p.r)p.x=-p.r;
+      if(p.y<-p.r)p.y=H+p.r;
+      if(p.y>H+p.r)p.y=-p.r;
+    });
+    animId=requestAnimationFrame(draw);
+  }
+
+  function startCanvas(){
+    if(animId)return;
+    resize(); init(); draw();
+  }
+
+  function stopCanvas(){
+    if(animId){cancelAnimationFrame(animId);animId=null;}
+    ctx.clearRect(0,0,W,H);
+  }
+
+  window.addEventListener('resize',function(){
+    if(isMobile()){stopCanvas();}
+    else{resize();if(!animId)draw();}
+  });
+
+  if(!isMobile()){startCanvas();}
+})();
+</script>
+</body>
+</html>
