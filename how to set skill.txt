@@ -1,0 +1,186 @@
+========================================
+CREATE A NEW CHATGPT AGENT SKILL
+========================================
+
+1. Open Terminal
+
+cd /Users/<your-user-name>/<your-project>
+
+----------------------------------------
+
+2. Create .agent Folder
+
+mkdir -p .agent
+
+----------------------------------------
+
+3. Create .skills Folder
+
+mkdir -p .agent/.skills
+
+----------------------------------------
+
+4. Create Your Skill Folder
+
+Example:
+
+mkdir -p .agent/.skills/ios-development
+
+Replace "ios-development" with your own skill name if needed.
+
+Examples:
+
+ios-development
+swiftui
+uikit
+architecture
+networking
+cloudkit
+firebase
+performance
+testing
+code-review
+release-notes
+app-store
+
+----------------------------------------
+
+5. Create SKILL.md
+
+touch .agent/.skills/ios-development/SKILL.md
+
+----------------------------------------
+
+6. Open SKILL.md
+
+Xcode
+
+open -a Xcode .agent/.skills/ios-development/SKILL.md
+
+OR
+
+VS Code
+
+code .agent/.skills/ios-development/SKILL.md
+
+----------------------------------------
+
+7. Paste Your Skill Content
+
+Paste the instructions into SKILL.md and save the file.
+
+----------------------------------------
+
+8. Verify Structure
+
+find .agent
+
+Expected Output:
+
+.agent
+.agent/.skills
+.agent/.skills/ios-development
+.agent/.skills/ios-development/SKILL.md
+
+----------------------------------------
+
+9. Reload ChatGPT
+
+Close and reopen ChatGPT Desktop (or reopen the project).
+
+----------------------------------------
+
+10. Verify Skill
+
+Type:
+
+@
+
+You should see:
+
+ios-development
+
+----------------------------------------
+
+11. Use the Skill
+
+@ios-development Create a Login screen using SwiftUI.
+
+@ios-development Review this ViewModel.
+
+@ios-development Fix all build errors.
+
+----------------------------------------
+
+12. Create More Skills
+
+.agent
+└── .skills
+    ├── ios-development
+    │   └── SKILL.md
+    ├── swiftui
+    │   └── SKILL.md
+    ├── networking
+    │   └── SKILL.md
+    ├── cloudkit
+    │   └── SKILL.md
+    ├── performance
+    │   └── SKILL.md
+    ├── testing
+    │   └── SKILL.md
+    ├── code-review
+    │   └── SKILL.md
+    └── release-notes
+        └── SKILL.md
+
+----------------------------------------
+
+Recommended Skills
+
+• ios-development
+• swiftui
+• uikit
+• architecture
+• networking
+• api-integration
+• cloudkit
+• swiftdata
+• coredata
+• firebase
+• authentication
+• performance
+• testing
+• debugging
+• code-review
+• release-notes
+• app-store
+• localization
+• accessibility
+• security
+• git-workflow
+• ci-cd
+• widgets
+• app-intents
+• live-activities
+
+----------------------------------------
+
+Daily Workflow
+
+1. Open your project.
+2. ChatGPT indexes the .agent/.skills folder.
+3. Type @ in the prompt.
+4. Select the required skill.
+5. Enter your request.
+
+Example:
+
+@ios-development Implement profile editing using SwiftUI.
+
+@networking Integrate this REST API using async/await.
+
+@performance Optimize this screen.
+
+@code-review Review this file.
+
+@release-notes Generate release notes for today's work.
